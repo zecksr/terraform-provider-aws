@@ -237,6 +237,33 @@ resource "aws_xray_group" "test" {
 `, rName, tagKey1)
 }
 
+func testAccGroupConfig_tagsComputed1(rName, tagKey1 string) string {
+	return fmt.Sprintf(`
+resource "aws_xray_group" "test" {
+  group_name        = %[1]q
+  filter_expression = "responsetime > 5"
+
+  tags = {
+    %[2]q = timestamp()
+  }
+}
+`, rName, tagKey1)
+}
+
+func testAccGroupConfig_tagsComputed2(rName, tagKey1, tagValue1, tagKey2 string) string {
+	return fmt.Sprintf(`
+resource "aws_xray_group" "test" {
+  group_name        = %[1]q
+  filter_expression = "responsetime > 5"
+
+  tags = {
+	%[2]q = %[3]q
+    %[4]q = timestamp()
+  }
+}
+`, rName, tagKey1, tagValue1, tagKey2)
+}
+
 func testAccGroupConfig_basicInsights(rName, expression string, insightsEnabled bool, notificationsEnabled bool) string {
 	return fmt.Sprintf(`
 resource "aws_xray_group" "test" {

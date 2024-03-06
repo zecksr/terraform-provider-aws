@@ -1175,6 +1175,51 @@ resource "aws_acmpca_certificate_authority" "test" {
 `, commonName, tagKey1)
 }
 
+func testAccCertificateAuthorityConfig_tagsComputed1(commonName, tagKey1 string) string {
+	return fmt.Sprintf(`
+resource "aws_acmpca_certificate_authority" "test" {
+  permanent_deletion_time_in_days = 7
+  usage_mode                      = "SHORT_LIVED_CERTIFICATE"
+
+  certificate_authority_configuration {
+    key_algorithm     = "RSA_4096"
+    signing_algorithm = "SHA512WITHRSA"
+
+    subject {
+      common_name = %[1]q
+    }
+  }
+
+  tags = {
+    %[2]q = timestamp()
+  }
+}
+`, commonName, tagKey1)
+}
+
+func testAccCertificateAuthorityConfig_tagsComputed2(commonName, tagKey1, tagValue1, tagKey2 string) string {
+	return fmt.Sprintf(`
+resource "aws_acmpca_certificate_authority" "test" {
+  permanent_deletion_time_in_days = 7
+  usage_mode                      = "SHORT_LIVED_CERTIFICATE"
+
+  certificate_authority_configuration {
+    key_algorithm     = "RSA_4096"
+    signing_algorithm = "SHA512WITHRSA"
+
+    subject {
+      common_name = %[1]q
+    }
+  }
+
+  tags = {
+	%[2]q = %[3]q
+    %[4]q = timestamp()
+  }
+}
+`, commonName, tagKey1, tagValue1, tagKey2)
+}
+
 func testAccCertificateAuthorityConfig_keyStorageSecurityStandard(commonName, certificateAuthorityType, keyStorageSecurityStandard string) string {
 	return fmt.Sprintf(`
 resource "aws_acmpca_certificate_authority" "test" {

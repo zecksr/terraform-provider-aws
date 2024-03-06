@@ -333,3 +333,56 @@ resource "aws_xray_sampling_rule" "test" {
 }
 `, rName, tagKey1)
 }
+
+func testAccSamplingRuleConfig_tagsComputed1(rName, tagKey1 string) string {
+	return fmt.Sprintf(`
+resource "aws_xray_sampling_rule" "test" {
+  rule_name      = %[1]q
+  priority       = 5
+  reservoir_size = 10
+  url_path       = "*"
+  host           = "*"
+  http_method    = "GET"
+  service_type   = "*"
+  service_name   = "*"
+  fixed_rate     = 0.3
+  resource_arn   = "*"
+  version        = 1
+
+  attributes = {
+    Hello = "World"
+  }
+
+  tags = {
+    %[2]q = timestamp()
+  }
+}
+`, rName, tagKey1)
+}
+
+func testAccSamplingRuleConfig_tagsComputed2(rName, tagKey1, tagValue1, tagKey2 string) string {
+	return fmt.Sprintf(`
+resource "aws_xray_sampling_rule" "test" {
+  rule_name      = %[1]q
+  priority       = 5
+  reservoir_size = 10
+  url_path       = "*"
+  host           = "*"
+  http_method    = "GET"
+  service_type   = "*"
+  service_name   = "*"
+  fixed_rate     = 0.3
+  resource_arn   = "*"
+  version        = 1
+
+  attributes = {
+    Hello = "World"
+  }
+
+  tags = {
+	%[2]q = %[3]q
+    %[4]q = timestamp()
+  }
+}
+`, rName, tagKey1, tagValue1, tagKey2)
+}
